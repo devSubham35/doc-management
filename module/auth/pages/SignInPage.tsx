@@ -2,18 +2,21 @@
 
 import { z } from "zod";
 import Link from "next/link";
-import { navRoutes } from "@/lib/navRoutes";
+import nookies from "nookies";
+import { constant } from "@/lib/constant";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useAuthSigninMutation } from "@/api/hook/auth/hook";
 import { SignInValidationSchema } from "../schema/auth.schema";
+import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
 
 const SignInPage = () => {
 
-  /// Sign in Mutation
-  const { mutateAsync: userSigninMutate, isPending: isUserSigninPending } = useAuthSigninMutation();
+  const { login, } = useAuthStore()
+  const { mutate: userSigninMutate, isPending: isUserSigninPending } = useAuthSigninMutation();
 
   /// Form handling & validation
   const { handleSubmit, control, formState: { errors } } = useForm<z.infer<typeof SignInValidationSchema>>({
@@ -25,13 +28,21 @@ const SignInPage = () => {
   });
 
   /// Form Submission
-  const onSubmit = async (data: z.infer<typeof SignInValidationSchema>) => {
-    await userSigninMutate(data, {
-      onSuccess: (data) => {
-        console.log(data?.data?.data?.data?.data)
+  const onSubmit = (data: z.infer<typeof SignInValidationSchema>) => {
+    userSigninMutate(data, {
+      onSuccess: (res) => {
+
+        nookies.set(null, constant.DOC_ACCESS_TOKEN, res.data.token, {
+          maxAge: 7 * 24 * 60 * 60,
+          path: "/",
+        });
+
+        login(res.data.user);
+
       },
     });
   };
+
 
   return (
     <div className="h-[calc(100vh-64px)] flex items-center justify-center">
@@ -95,7 +106,7 @@ const SignInPage = () => {
           <p className="text-sm text-center">
             Don&apos;t have an account?
             <Link
-              href={navRoutes?.auth?.signUp}
+              href={PAGE_PATHS.auth.signUp}
               className="ml-1 underline text-muted-foreground"
             >
               Create account

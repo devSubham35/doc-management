@@ -4,16 +4,15 @@ import Link from "next/link";
 import { NavMenu } from "./nav-menu";
 import ProfileMenu from "../ProfileMenu";
 import { Logo } from "@/public/icons/logo";
-import { navRoutes } from "@/lib/navRoutes";
 import { ThemeToggler } from "../ThemeToggler";
 import { Button } from "@/components/ui/button";
 import { NavigationSheet } from "./navigation-sheet";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
 
 const Navbar = () => {
 
-  const user = useAuthStore((s) => s.user);
-  console.log(user, "++66")
+  const { user, logout } = useAuthStore();
 
   return (
     <nav className="h-16 bg-background border-b">
@@ -28,15 +27,15 @@ const Navbar = () => {
 
         <div className="flex items-center gap-3">
           {user ? (
-            <ProfileMenu user={user} />
+            <ProfileMenu user={user} logout={logout} />
           ) : (
             <>
-              <Link href={navRoutes?.auth?.signIn}>
+              <Link href={PAGE_PATHS.auth.signIn}>
                 <Button variant="outline" className="hidden sm:inline-flex">
                   Sign In
                 </Button>
               </Link>
-              <Link href={navRoutes?.auth?.signUp}>
+              <Link href={PAGE_PATHS.auth.signUp}>
                 <Button>Sign Up</Button>
               </Link>
             </>

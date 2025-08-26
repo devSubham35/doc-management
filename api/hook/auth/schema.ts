@@ -11,10 +11,10 @@ export interface LoginPayload {
 }
 
 export interface LoginAPiResponse extends BaseApiResponse {
-  data: LoginAPiResponse
+  data: LoginResponse
 }
 
-export interface LoginAPiResponse {
+export interface LoginResponse {
   token: string
   user: User
 }

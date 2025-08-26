@@ -3,9 +3,9 @@
 import { z } from "zod";
 import Link from "next/link";
 import { Role } from "prisma/client";
-import { navRoutes } from "@/lib/navRoutes";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthSignupMutation } from "@/api/hook/auth/hook";
@@ -125,7 +125,7 @@ const SignUpPage = () => {
         <p className="mt-5 text-sm text-center">
           Already have an account?
           <Link
-            href={navRoutes?.auth?.signIn}
+            href={PAGE_PATHS.auth.signIn}
             className="ml-1 underline text-muted-foreground"
           >
             Log in

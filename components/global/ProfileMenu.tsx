@@ -1,24 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { User } from "@/api/hook/auth/schema";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { User } from "@/api/hook/auth/schema";
 
 type ProfileMenuProps = {
   user: User;
+  logout: ()=> void;
 };
 
-const ProfileMenu = ({ user }: ProfileMenuProps) => {
+const ProfileMenu = ({ user, logout }: ProfileMenuProps) => {
 
   const router = useRouter();
-  const logout = useAuthStore((s) => s.logout);
-
-  const handleLogout = async () => {
-    logout();
-    router.push("/");
-  };
 
   return (
     <DropdownMenu>
@@ -35,7 +29,7 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
         <DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
           Profile
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

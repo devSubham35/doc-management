@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/db";
-import { cookies } from "next/headers";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
@@ -40,18 +39,4 @@ export async function updateProfile(data: { name?: string }) {
   revalidatePath("/dashboard/profile");
 
   return updatedUser;
-}
-
-//////////////////////////////////////
-/// User Logout
-//////////////////////////////////////
-
-export async function logoutAction() {
-  (await cookies()).set("token", "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
-    maxAge: 0, // expire immediately
-  });
 }
