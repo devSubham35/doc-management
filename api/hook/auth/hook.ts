@@ -2,7 +2,7 @@ import { authKeys } from "./key";
 import { endpoints } from "@/api/endpoints";
 import axiosInstance from "@/api/axiosInstance";
 import { useMutation } from "@tanstack/react-query";
-import { LoginPayload, SignUpPayload } from "./schema";
+import { LoginAPiResponse, LoginPayload, SignUpPayload } from "./schema";
 
 export const useAuthSignupMutation = () => {
   return useMutation({
@@ -22,7 +22,7 @@ export const useAuthSigninMutation = () => {
   return useMutation({
     mutationKey: [authKeys.auth_login],
     mutationFn: async (body: LoginPayload) => {
-      const res = await axiosInstance.post(
+      const res = await axiosInstance.post<LoginAPiResponse>(
         endpoints.auth.signin,
         body
       );

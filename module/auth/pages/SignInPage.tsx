@@ -16,7 +16,7 @@ const SignInPage = () => {
   const { mutateAsync: userSigninMutate, isPending: isUserSigninPending } = useAuthSigninMutation();
 
   /// Form handling & validation
-  const { handleSubmit, control, formState: { errors }} = useForm<z.infer<typeof SignInValidationSchema>>({
+  const { handleSubmit, control, formState: { errors } } = useForm<z.infer<typeof SignInValidationSchema>>({
     defaultValues: {
       email: "",
       password: "",
@@ -26,7 +26,11 @@ const SignInPage = () => {
 
   /// Form Submission
   const onSubmit = async (data: z.infer<typeof SignInValidationSchema>) => {
-    await userSigninMutate(data);
+    await userSigninMutate(data, {
+      onSuccess: (data) => {
+        console.log(data?.data?.data?.data?.data)
+      },
+    });
   };
 
   return (
