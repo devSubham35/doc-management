@@ -120,3 +120,7 @@
     @apply font-sans bg-background text-foreground;
   }
 }
+
+.custom-container {
+  @apply max-w-screen-xl mx-auto;
+}

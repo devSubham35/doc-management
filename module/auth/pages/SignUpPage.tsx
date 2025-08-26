@@ -6,14 +6,12 @@ import { navRoutes } from "@/lib/navRoutes";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Controller, useForm } from "react-hook-form";
-import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GoogleLogo } from "@/public/icons/google-logo";
 import { useAuthSignupMutation } from "@/api/hook/auth/hook";
 import { SignUpValidationSchema } from "../schema/auth.schema";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const SignUpPage = () => {
-
   /// Sign in Mutation
   const { mutateAsync: userSignupMutate, isPending: isUserSignupPending } = useAuthSignupMutation();
 
@@ -23,6 +21,7 @@ const SignUpPage = () => {
       email: "",
       password: "",
       full_name: "",
+      role: undefined,
     },
     resolver: zodResolver(SignUpValidationSchema),
   });
@@ -36,21 +35,10 @@ const SignUpPage = () => {
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
       <div className="max-w-sm w-full flex flex-col items-center border rounded-lg p-6 shadow-sm">
         <p className="mt-4 text-xl font-bold tracking-tight">
-          Sign up for LMS Platform
+          Sign up
         </p>
 
-        <Button className="mt-8 w-full gap-3">
-          <GoogleLogo />
-          Continue with Google
-        </Button>
-
-        <div className="my-7 w-full flex items-center justify-center overflow-hidden">
-          <Separator />
-          <span className="text-sm px-2">OR</span>
-          <Separator />
-        </div>
-
-        <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <form className="w-full space-y-2" onSubmit={handleSubmit(onSubmit)}>
           {/* Full Name */}
           <div>
             <label className="block text-sm font-medium">Full Name</label>
@@ -62,9 +50,32 @@ const SignUpPage = () => {
               )}
             />
             {errors.full_name && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.full_name.message}
-              </p>
+              <p className="text-sm text-red-500 mt-1">{errors.full_name.message}</p>
+            )}
+          </div>
+
+          {/* Role Dropdown */}
+          <div>
+            <label className="block text-sm font-medium">Role</label>
+            <Controller
+              name="role"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Clinician">Clinician</SelectItem>
+                    <SelectItem value="Supervisor">Supervisor</SelectItem>
+                    <SelectItem value="SchoolPartner">School Partner</SelectItem>
+                    <SelectItem value="Payroll">Payroll</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.role && (
+              <p className="text-sm text-red-500 mt-1">{errors.role.message}</p>
             )}
           </div>
 
@@ -79,9 +90,7 @@ const SignUpPage = () => {
               )}
             />
             {errors.email && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.email.message}
-              </p>
+              <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
             )}
           </div>
 
@@ -96,11 +105,10 @@ const SignUpPage = () => {
               )}
             />
             {errors.password && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.password.message}
-              </p>
+              <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
             )}
           </div>
+
 
           {/* Submit */}
           <Button
