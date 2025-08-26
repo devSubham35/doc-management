@@ -1,6 +1,6 @@
 export interface SignUpPayload {
   email: string;
-  full_name: string;
+  name: string;
   password: string;
 }
 export interface LoginPayload {

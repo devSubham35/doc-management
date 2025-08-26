@@ -1,10 +1,11 @@
+import { Role } from "prisma/client";
 import { z } from "zod";
 
 export const SignUpValidationSchema = z.object({
   email: z.string().email(),
-  full_name: z.string(),
+  name: z.string(),
   password: z.string().min(8, "Password must be at least 8 characters long"),
-  role: z.enum(["Clinician", "Supervisor", "SchoolPartner", "Payroll"])
+  role: z.enum([Role.CLINICIAN, Role.SUPERVISOR, Role.SCHOOL_PARTNER, Role.PAYROLL])
     .refine((val) => !!val, { message: "Role is required" }),
 });
 

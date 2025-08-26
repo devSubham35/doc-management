@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import Link from "next/link";
+import { Role } from "prisma/client";
 import { navRoutes } from "@/lib/navRoutes";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { SignUpValidationSchema } from "../schema/auth.schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const SignUpPage = () => {
+
   /// Sign in Mutation
   const { mutateAsync: userSignupMutate, isPending: isUserSignupPending } = useAuthSignupMutation();
 
@@ -20,7 +22,7 @@ const SignUpPage = () => {
     defaultValues: {
       email: "",
       password: "",
-      full_name: "",
+      name: "",
       role: undefined,
     },
     resolver: zodResolver(SignUpValidationSchema),
@@ -43,14 +45,14 @@ const SignUpPage = () => {
           <div>
             <label className="block text-sm font-medium">Full Name</label>
             <Controller
-              name="full_name"
+              name="name"
               control={control}
               render={({ field }) => (
                 <Input type="text" placeholder="Full name" {...field} />
               )}
             />
-            {errors.full_name && (
-              <p className="text-sm text-red-500 mt-1">{errors.full_name.message}</p>
+            {errors.name && (
+              <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
             )}
           </div>
 
@@ -66,10 +68,10 @@ const SignUpPage = () => {
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Clinician">Clinician</SelectItem>
-                    <SelectItem value="Supervisor">Supervisor</SelectItem>
-                    <SelectItem value="SchoolPartner">School Partner</SelectItem>
-                    <SelectItem value="Payroll">Payroll</SelectItem>
+                    <SelectItem value={Role.CLINICIAN}>Clinician</SelectItem>
+                    <SelectItem value={Role.SUPERVISOR}>Supervisor</SelectItem>
+                    <SelectItem value={Role.SCHOOL_PARTNER}>School Partner</SelectItem>
+                    <SelectItem value={Role.PAYROLL}>Payroll</SelectItem>
                   </SelectContent>
                 </Select>
               )}

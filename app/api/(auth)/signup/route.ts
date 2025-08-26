@@ -6,9 +6,9 @@ import { successResponse } from "@/lib/handler/ApiResponse";
 
 export const POST = asyncHandler(async (req: Request) => {
   
-  const { full_name, email, password } = await req.json();
+  const { name, email, password, role } = await req.json();
 
-  if (!full_name || !email || !password) {
+  if (!name || !email || !password || !role) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -21,8 +21,13 @@ export const POST = asyncHandler(async (req: Request) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const newUser = await prisma.user.create({
-    data: { full_name, email, password: hashedPassword },
-    select: { id: true, full_name: true, email: true },
+    data: {
+      role,
+      name,
+      email,
+      password: hashedPassword,
+    },
+    select: { id: true, name: true, email: true, role: true },
   });
 
   return successResponse(201, "Sign up successfully", newUser);

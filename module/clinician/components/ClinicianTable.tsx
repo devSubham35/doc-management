@@ -224,7 +224,6 @@ export default function ClinicianTable() {
             <TableHead>Date</TableHead>
             <TableHead>Hours</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Created At</TableHead>
             <TableHead>File</TableHead>
           </TableRow>
         </TableHeader>
@@ -236,7 +235,6 @@ export default function ClinicianTable() {
               <TableCell>{s.date}</TableCell>
               <TableCell>{s.hours}</TableCell>
               <TableCell>{getStatusBadge(s.status)}</TableCell>
-              <TableCell className="text-gray-500">{s.createdAt}</TableCell>
               <TableCell>
                 {s.fileUrl ? (
                   <a

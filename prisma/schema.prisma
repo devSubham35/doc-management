@@ -8,9 +8,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Submission {
+  id              String   @id @default(cuid())
+  clinicianId     String
+  clinician       User     @relation(fields: [clinicianId], references: [id])
+
+  studentInitials String
+  date            DateTime
+  evaluationType  String
+  hours           Int
+  reportUrl       String
+
+  status          SubmissionStatus @default(PENDING)
+
+  supervisorNotes String?
+  partnerNotes    String?
+  payrollNotes    String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum SubmissionStatus {
+  PENDING
+  SUPERVISOR_APPROVED
+  SUPERVISOR_REJECTED
+  PARTNER_APPROVED
+  PARTNER_REJECTED
+  PAYROLL_APPROVED
+  PAYROLL_REJECTED
+  COMPLETED
+}
+
 model User {
-  id            String @id @default(cuid())
-  full_name     String
-  email         String @unique
-  password      String
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  submissions Submission[]
+}
+
+enum Role {
+  CLINICIAN
+  SUPERVISOR
+  SCHOOL_PARTNER
+  PAYROLL
 }
