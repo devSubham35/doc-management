@@ -11,8 +11,8 @@ const outFit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "NextJS Prisma Starter",
-  description: "Build a simple Project",
+  title: "E-doc-management",
+  description: "Build a simple e-doc management",
 };
 
 export default function RootLayout({
