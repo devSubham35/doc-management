@@ -1,9 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import { NavMenu } from "./nav-menu";
 import ProfileMenu from "../ProfileMenu";
-import { Logo } from "@/public/icons/logo";
 import { ThemeToggler } from "../ThemeToggler";
 import { Button } from "@/components/ui/button";
 import { NavigationSheet } from "./navigation-sheet";
@@ -16,13 +14,11 @@ const Navbar = () => {
 
   return (
     <nav className="h-16 bg-background border-b">
-      <div className="h-full flex items-center justify-between custom-container">
+      <div className="h-full flex items-center justify-between p-6">
         <div className="flex items-center gap-8">
           <Link href="/">
-            <Logo />
+            <h1 className="text-xl font-bold">EDoc</h1>
           </Link>
-          {/* Desktop Menu */}
-          <NavMenu className="hidden md:block" />
         </div>
 
         <div className="flex items-center gap-3">

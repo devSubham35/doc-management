@@ -41,7 +41,7 @@ const SignInPage = () => {
         });
 
         login(res.data.user);
-        router.push(PAGE_PATHS.clinician.dashboard.overview)
+        router.push(PAGE_PATHS.clinician.dashboard.root)
 
       },
     });

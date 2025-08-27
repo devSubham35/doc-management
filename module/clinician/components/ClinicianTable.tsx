@@ -24,6 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Download, Clock, CheckCircle2, XCircle } from "lucide-react";
+import PageHeader from "@/components/global/PageHeader";
 
 type Submission = {
   id: number;
@@ -146,10 +147,10 @@ export default function ClinicianTable() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow">
+    <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Submission Table</h1>
+      <div className="flex justify-between mb-4">
+        <PageHeader title="Submisstion table" />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button onClick={() => setIsOpen(true)}>+ New Submission</Button>

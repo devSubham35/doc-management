@@ -6,8 +6,8 @@ export const PAGE_PATHS = {
 
     clinician: {
         dashboard: {
-            overview: "/dashboard/clinician",
-            submissions: "/dashboard/clinician/submission-table",
+            root: "/dashboard",
+            submissions: "/dashboard/submission-table",
         }
     }
 }

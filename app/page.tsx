@@ -20,7 +20,7 @@ const HomePage = () => {
 
         {/* CTA Buttons */}
         <div className="mt-12 flex items-center justify-center gap-4">
-          <Link href={PAGE_PATHS.clinician.dashboard.overview}>
+          <Link href={PAGE_PATHS.clinician.dashboard.root}>
             <Button size="lg" className="rounded-full text-base">
               Get Started <ArrowUpRight className="ml-2 h-5 w-5" />
             </Button>

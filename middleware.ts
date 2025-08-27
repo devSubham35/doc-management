@@ -29,7 +29,7 @@ export default function middleware(req: NextRequest) {
   // 2. Logged in, trying to access auth/public route → redirect to dashboard
   if (token && isAuthPublicRoute(pathname)) {
     return NextResponse.redirect(
-      new URL(PAGE_PATHS.clinician.dashboard.overview, req.url)
+      new URL(PAGE_PATHS.clinician.dashboard.root, req.url)
     );
   }
 
