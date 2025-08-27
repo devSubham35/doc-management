@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { Role, SubmissionStatus } from "prisma/client";
+import { Role, SubmissionStatus } from "@/typescript/interface/common.types";
 
 export const GET = async () => {
   try {

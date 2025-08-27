@@ -2,7 +2,6 @@
 
 import { z } from "zod";
 import Link from "next/link";
-import { Role } from "prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
@@ -11,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthSignupMutation } from "@/api/hook/auth/hook";
 import { SignUpValidationSchema } from "../schema/auth.schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Role } from "../../../typescript/interface/common.types";
 
 const SignUpPage = () => {
 

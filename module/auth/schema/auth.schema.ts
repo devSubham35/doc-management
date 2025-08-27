@@ -1,5 +1,5 @@
-import { Role } from "prisma/client";
 import { z } from "zod";
+import { Role } from "../../../typescript/interface/common.types";
 
 export const SignUpValidationSchema = z.object({
   email: z.string().email(),
