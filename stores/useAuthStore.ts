@@ -15,6 +15,8 @@ type AuthState = {
 
 import nookies from "nookies";
 import { constant } from "@/lib/constant";
+import { redirect } from "next/navigation";
+import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -28,13 +30,12 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         try {
-          // Destroy cookie
-          nookies.destroy(null, constant.DOC_ACCESS_TOKEN);
-
+          nookies.destroy(null, constant.DOC_ACCESS_TOKEN, { path: "/" });
+          useAuthStore.persist.clearStorage();
+          redirect(PAGE_PATHS.auth.signIn)
         } catch (err) {
           console.error("Logout error:", err);
         } finally {
-          // Reset Zustand state
           set({ user: null, isAuthenticated: false });
         }
       },

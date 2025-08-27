@@ -1,77 +1,38 @@
-// middleware.ts
-import { Role } from "prisma/client";
-import { jwtDecode } from "jwt-decode";
-import { constant } from "@/lib/constant";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
+import { PAGE_PATHS } from "./lib/routes/PageRoutes";
+import { NextRequest, NextResponse } from "next/server";
+import { constant } from "./lib/constant";
 
-export function middleware(req: NextRequest) {
-  const token = req.cookies.get(constant.DOC_ACCESS_TOKEN)?.value;
+const protectedRoutes = ["/dashboard"];
+const publicRoutes = ["/sign-up", "/sign-in", "/"];
+
+/// Check Public route
+const isAuthPublicRoute = (pathname: string) => {
+  return publicRoutes.some((route) => pathname === route);
+};
+
+/// Check Protected route
+const isProtectedRoute = (pathname: string) => {
+  return protectedRoutes.some((route) => pathname.startsWith(route));
+};
+
+export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const token = req.cookies.get(constant.DOC_ACCESS_TOKEN)?.value;
 
-  // --- Role → Dashboard mapping
-  const roleRoutes: Record<Role, string> = {
-    CLINICIAN: PAGE_PATHS.clinician.dashboard.overview,
-    SUPERVISOR: PAGE_PATHS.supervisor.dashboard.overview,
-    SCHOOL_PARTNER: PAGE_PATHS.partner.dashboard.overview,
-    PAYROLL: PAGE_PATHS.payrole.dashboard.overview,
-  };
-
-  // --- If no token
-  if (!token) {
-    // allow access to auth pages without redirect loop
-    if (
-      pathname === PAGE_PATHS.auth.signIn ||
-      pathname === PAGE_PATHS.auth.signUp
-    ) {
-      return NextResponse.next();
-    }
-
-    // otherwise → force login
-    return NextResponse.redirect(new URL(PAGE_PATHS.auth.signIn, req.url));
+  // 1. Not logged in, trying to access protected route → redirect to sign-in
+  if (!token && isProtectedRoute(pathname)) {
+    return NextResponse.redirect(
+      new URL(PAGE_PATHS.auth.signIn, req.url)
+    );
   }
 
-  // --- Decode token
-  let userRole: Role | null = null;
-  try {
-    const decoded: { role: Role } = jwtDecode(token);
-    userRole = decoded.role;
-  } catch (e) {
-    console.error("Invalid token", e);
-    return NextResponse.redirect(new URL(PAGE_PATHS.auth.signIn, req.url));
+  // 2. Logged in, trying to access auth/public route → redirect to dashboard
+  if (token && isAuthPublicRoute(pathname)) {
+    return NextResponse.redirect(
+      new URL(PAGE_PATHS.clinician.dashboard.overview, req.url)
+    );
   }
 
-  // --- If logged in but visiting sign-in/sign-up → redirect to dashboard
-  if (
-    pathname === PAGE_PATHS.auth.signIn ||
-    pathname === PAGE_PATHS.auth.signUp
-  ) {
-    return NextResponse.redirect(new URL(roleRoutes[userRole], req.url));
-  }
-
-  // --- Enforce role-based dashboard access
-  if (pathname.startsWith("/dashboard/clinician") && userRole !== Role.CLINICIAN) {
-    return NextResponse.redirect(new URL(roleRoutes[userRole], req.url));
-  }
-  if (pathname.startsWith("/dashboard/supervisor") && userRole !== Role.SUPERVISOR) {
-    return NextResponse.redirect(new URL(roleRoutes[userRole], req.url));
-  }
-  if (pathname.startsWith("/dashboard/partner") && userRole !== Role.SCHOOL_PARTNER) {
-    return NextResponse.redirect(new URL(roleRoutes[userRole], req.url));
-  }
-  if (pathname.startsWith("/dashboard/payrole") && userRole !== Role.PAYROLL) {
-    return NextResponse.redirect(new URL(roleRoutes[userRole], req.url));
-  }
-
+  // 3. Otherwise → continue
   return NextResponse.next();
 }
-
-// --- Apply only to auth + dashboard routes
-export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/sign-in",
-    "/sign-up",
-  ],
-};

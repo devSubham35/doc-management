@@ -4,18 +4,21 @@ import { z } from "zod";
 import Link from "next/link";
 import nookies from "nookies";
 import { constant } from "@/lib/constant";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useAuthSigninMutation } from "@/api/hook/auth/hook";
 import { SignInValidationSchema } from "../schema/auth.schema";
-import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
+
 
 const SignInPage = () => {
 
-  const { login, } = useAuthStore()
+  const router = useRouter();
+  const { login, } = useAuthStore();
   const { mutate: userSigninMutate, isPending: isUserSigninPending } = useAuthSigninMutation();
 
   /// Form handling & validation
@@ -38,6 +41,7 @@ const SignInPage = () => {
         });
 
         login(res.data.user);
+        router.push(PAGE_PATHS.clinician.dashboard.overview)
 
       },
     });

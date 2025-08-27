@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { User } from "@/api/hook/auth/schema";
+import { PAGE_PATHS } from "@/lib/routes/PageRoutes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
@@ -13,6 +14,11 @@ type ProfileMenuProps = {
 const ProfileMenu = ({ user, logout }: ProfileMenuProps) => {
 
   const router = useRouter();
+
+  const handleLogout =()=> {
+    logout();
+    router.push(PAGE_PATHS.auth.signIn);
+  }
 
   return (
     <DropdownMenu>
@@ -29,7 +35,9 @@ const ProfileMenu = ({ user, logout }: ProfileMenuProps) => {
         <DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
           Profile
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
