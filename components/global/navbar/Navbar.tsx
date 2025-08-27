@@ -17,7 +17,7 @@ const Navbar = () => {
       <div className="h-full flex items-center justify-between p-6">
         <div className="flex items-center gap-8">
           <Link href="/">
-            <h1 className="text-xl font-bold">EDoc</h1>
+            <h1 className="text-xl font-bold">{user?.role ? `${user?.role.toUpperCase()} -  Portal` : "EDoc"}</h1>
           </Link>
         </div>
 

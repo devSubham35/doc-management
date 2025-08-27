@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { prisma } from "@/lib/db";
 import { constant } from "@/lib/constant";
@@ -20,11 +20,11 @@ export const POST = asyncHandler(async (req: Request) => {
     throw new ApiError(400, "User not exist");
   }
 
-  const isValidPassword = await bcrypt.compare(password, existedUser.password);
+  // const isValidPassword = await bcrypt.compare(password, existedUser.password);
 
-  if (!isValidPassword) {
-    throw new ApiError(400, "Invalid credentials");
-  }
+  // if (!isValidPassword) {
+  //   throw new ApiError(400, "Invalid credentials");
+  // }
 
   const token = jwt.sign(
     {

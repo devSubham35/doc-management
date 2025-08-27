@@ -5,7 +5,7 @@ export const SignUpValidationSchema = z.object({
   email: z.string().email(),
   name: z.string(),
   password: z.string().min(8, "Password must be at least 8 characters long"),
-  role: z.enum([Role.CLINICIAN, Role.SUPERVISOR, Role.SCHOOL_PARTNER, Role.PAYROLL])
+  role: z.enum([Role.CLINICIAN, Role.SUPERVISOR, Role.PARTNER, Role.PAYROLL])
     .refine((val) => !!val, { message: "Role is required" }),
 });
 

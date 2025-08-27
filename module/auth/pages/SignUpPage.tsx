@@ -70,7 +70,7 @@ const SignUpPage = () => {
                   <SelectContent>
                     <SelectItem value={Role.CLINICIAN}>Clinician</SelectItem>
                     <SelectItem value={Role.SUPERVISOR}>Supervisor</SelectItem>
-                    <SelectItem value={Role.SCHOOL_PARTNER}>School Partner</SelectItem>
+                    <SelectItem value={Role.PARTNER}>Partner</SelectItem>
                     <SelectItem value={Role.PAYROLL}>Payroll</SelectItem>
                   </SelectContent>
                 </Select>
