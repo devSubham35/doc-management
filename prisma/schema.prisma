@@ -8,25 +8,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Submission {
-  id              String   @id @default(cuid())
-  clinicianId     String
-  clinician       User     @relation(fields: [clinicianId], references: [id])
+//////////////////////////////////////////////
+///////////// ENUMS //////////////////////////
+//////////////////////////////////////////////
 
-  studentInitials String
-  date            DateTime
-  evaluationType  String
-  hours           Int
-  reportUrl       String
-
-  status          SubmissionStatus @default(PENDING)
-
-  supervisorNotes String?
-  partnerNotes    String?
-  payrollNotes    String?
-
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+enum Role {
+  CLINICIAN
+  SUPERVISOR
+  PARTNER
+  PAYROLL
 }
 
 enum SubmissionStatus {
@@ -40,21 +30,75 @@ enum SubmissionStatus {
   COMPLETED
 }
 
+//////////////////////////////////////////////
+///////////// MODELS /////////////////////////
+//////////////////////////////////////////////
+
 model User {
   id        String   @id @default(cuid())
-  name      String
   email     String   @unique
   password  String
+  name      String?
   role      Role
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  submissions Submission[]
+  // Relations
+  submissions         Submission[] @relation("ClinicianSubmissions")
+  supervisorApprovals Submission[] @relation("SupervisorApprovals")
+  partnerApprovals    Submission[] @relation("PartnerApprovals")
+  payrollApprovals    Submission[] @relation("PayrollApprovals")
+
+  @@map("users")
 }
 
-enum Role {
-  CLINICIAN
-  SUPERVISOR
-  SCHOOL_PARTNER
-  PAYROLL
+model Submission {
+  id              String           @id @default(cuid())
+  studentInitials String
+  workDate        DateTime
+  evaluationType  String
+  hours           Float
+  reportUrl       String?
+  supervisorNotes String?
+  partnerNotes    String?
+  payrollNotes    String?
+  status          SubmissionStatus @default(PENDING)
+  isCompleted     Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  // Foreign Keys
+  clinicianId  String
+  supervisorId String?
+  partnerId    String?
+  payrollId    String?
+
+  // Relations
+  clinician  User  @relation("ClinicianSubmissions", fields: [clinicianId], references: [id])
+  supervisor User? @relation("SupervisorApprovals", fields: [supervisorId], references: [id])
+  partner    User? @relation("PartnerApprovals", fields: [partnerId], references: [id])
+  payroll    User? @relation("PayrollApprovals", fields: [payrollId], references: [id])
+
+  // Approval history
+  approvalHistory ApprovalHistory[]
+
+  @@map("submissions")
+}
+
+model ApprovalHistory {
+  id           String           @id @default(cuid())
+  submissionId String
+  fromStatus   SubmissionStatus?
+  toStatus     SubmissionStatus
+  action       String           // "APPROVED" or "REJECTED"
+  note         String?          // Rejection note or approval comment
+  userId       String           // Who performed the action
+  userName     String           // Store name for audit trail
+  userRole     Role             // Store role for audit trail
+  createdAt    DateTime         @default(now())
+
+  // Relations
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@map("approval_history")
 }
