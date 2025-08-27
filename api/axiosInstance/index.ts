@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
 
   const cookies = parseCookies();
-  const token = cookies?.[constant.ACCESS_TOKEN];
+  const token = cookies?.[constant.DOC_ACCESS_TOKEN];
 
   if (token && !!config.headers) {
     config.headers["Authorization"] = `Bearer ${token}`;
@@ -37,7 +37,7 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError<BaseApiResponse>) => {
     if (error?.status == 401) {
       globalCatchError(error);
-      clearCookie(constant.ACCESS_TOKEN);
+      clearCookie(constant.DOC_ACCESS_TOKEN);
       window.location.reload();
     } else {
       globalCatchError(error);
