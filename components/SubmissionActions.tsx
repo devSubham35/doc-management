@@ -23,7 +23,7 @@ export default function SubmissionActions({ submissionId, role, onActionDone }: 
     setLoading(true);
 
     const res = await fetch(`/api/submissions/${submissionId}`, {
-      method: "PUT",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ role, action, notes }),
     });

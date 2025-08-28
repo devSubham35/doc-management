@@ -19,28 +19,30 @@ export async function GET(
 }
 
 // UPDATE (approve / reject with notes)
-export async function PUT(
+export async function POST(
   req: Request,
-  context: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }  // ✅ Promise here
 ) {
+  const { id } = await context.params;  // ✅ await the params
+
   try {
-    const { id } = await context.params;         // 👈 await here
-    const body = await req.json();
-    const { role, action, notes } = body;
+    const { role, action, notes } = await req.json();
 
     let status = "PENDING";
-    let updateData: Record<string, unknown> = {};
+    const updateData: Record<string, unknown> = {};
 
     if (role === "SUPERVISOR") {
       status = action === "APPROVE" ? "SUPERVISOR_APPROVED" : "SUPERVISOR_REJECTED";
-      updateData = { status, supervisorNotes: notes };
+      updateData.supervisorNotes = notes;
     } else if (role === "PARTNER") {
       status = action === "APPROVE" ? "PARTNER_APPROVED" : "PARTNER_REJECTED";
-      updateData = { status, partnerNotes: notes };
+      updateData.partnerNotes = notes;
     } else if (role === "PAYROLL") {
       status = action === "APPROVE" ? "PAYROLL_APPROVED" : "PAYROLL_REJECTED";
-      updateData = { status, payrollNotes: notes };
+      updateData.payrollNotes = notes;
     }
+
+    updateData.status = status;
 
     const updated = await prisma.submission.update({
       where: { id },
