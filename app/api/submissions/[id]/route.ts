@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // GET single submission
 export async function GET(
@@ -18,12 +18,12 @@ export async function GET(
   return NextResponse.json(submission, { status: 200 });
 }
 
-// UPDATE (approve / reject with notes)
-export async function POST(
-  req: Request,
-  context: { params: Promise<{ id: string }> }  // ✅ Promise here
-) {
-  const { id } = await context.params;  // ✅ await the params
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function PATCH(req: NextRequest, context: any) {
+
+  const { id } = context?.params;
 
   try {
     const { role, action, notes } = await req.json();
