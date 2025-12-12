@@ -22,12 +22,12 @@ export default function SubmissionActions({ submissionId, role, onActionDone }: 
     if (!action) return;
     setLoading(true);
 
-    const res = await fetch(`/api/submissions/${submissionId}`, {
+    const res = await fetch("/api/submissions", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role, action, notes }),
+      body: JSON.stringify({ id: submissionId, role, action, notes }),
     });
-
+    
     setLoading(false);
     if (res.ok) {
       setOpen(false);
